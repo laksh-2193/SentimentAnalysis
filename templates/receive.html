@@ -1,0 +1,169 @@
+<!-- templates/receive.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Receive Page</title>
+    <!-- Link to CSS -->
+    <link href="../static/bootstrap.min.css" rel="stylesheet" />
+    <link href="../static/style.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+    <script>
+        var socket;
+        var messages = []; // Store received messages locally
+        var autoSelectLast = true; // Flag for auto-select last message
+
+        $(document).ready(function () {
+            socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+
+            socket.on('message', function (data) {
+                messages.push(data); // Store received messages in the local array
+                displayMessages(messages); // Update the display with all messages
+
+                if (autoSelectLast) {
+                    updateSelectedMessage(data.id); // Update the selected message only if autoSelectLast is true
+                }
+            });
+
+            // Change event for auto-select checkbox
+            $('#autoSelectLast').change(function () {
+                autoSelectLast = $(this).prop('checked');
+
+                if (autoSelectLast) {
+                    // If autoSelectLast is checked, update the selected message to the last one
+                    updateSelectedMessage(messages[messages.length - 1].id);
+                } else {
+                    // If autoSelectLast is unchecked, clear the selected message
+                    clearSelectedMessage();
+                }
+            });
+
+            // Click event for highlighted message
+            $('#chat').on('click', '.message', function () {
+                autoSelectLast = false; // Disable auto-select on manual selection
+                $('#autoSelectLast').prop('checked', false);
+
+                $('.message').removeClass('selected'); // Remove 'selected' class from all messages
+                $(this).addClass('selected'); // Add 'selected' class to the clicked message
+
+                var selectedId = $(this).attr('data-id');
+                var selectedData = messages.find(message => message.id == selectedId);
+                $('#selectedMessage').text(selectedData.msg); // Display only the message content without the timestamp
+
+                // Find the corresponding sentiment and probability based on the selected ID
+                displaySentiment(selectedData.sentiment);
+                $('#probability').text(selectedData.probability);
+            });
+
+        });
+
+        function displayMessages(messages) {
+            var selectedId = $('.message.selected').attr('data-id'); // Get the ID of the currently selected message
+            var $chatContainer = $('#chat');
+
+            // Clear existing messages
+            $chatContainer.empty();
+
+            // Create a message container with a max height and make it scrollable
+            var $messageContainer = $('<div class="message-container"></div>');
+            messages.forEach(function (data) {
+                var timestamp = new Date(data.timestamp).toLocaleTimeString(); // Format timestamp
+                var newMessage = $('<div class="message"></div>').html('<span class="timestamp">[' + timestamp + ']</span> ' + data.msg).attr('data-id', data.id);
+                $messageContainer.prepend(newMessage); // Prepend new messages to show them at the bottom
+            });
+
+            // Append the message container to the chat container
+            $chatContainer.append($messageContainer);
+
+            // If there was a selected message, reselect it after updating the display
+            if (selectedId) {
+                updateSelectedMessage(selectedId);
+            }
+        }
+
+        function updateSelectedMessage(selectedId) {
+            var selectedData = messages.find(message => message.id == selectedId);
+            if (selectedData) {
+                $('#selectedMessage').text(selectedData.msg);
+                displaySentiment(selectedData.sentiment);
+                $('#probability').text(selectedData.probability);
+
+                // Remove 'selected' class from all messages and add it to the selected one
+                $('.message').removeClass('selected');
+                $('.message[data-id="' + selectedId + '"]').addClass('selected');
+            }
+        }
+
+        function clearSelectedMessage() {
+            $('#selectedMessage').text('');
+            $('#sentiment').html('');
+            $('#probability').text('');
+            $('.message').removeClass('selected');
+        }
+
+        function displaySentiment(sentiment) {
+            var $sentimentElement = $('#sentiment');
+
+            // Clear existing content
+            $sentimentElement.html('');
+
+            // Set default styles
+            var style = 'color: #ffffff; font-weight: bold;';
+
+            // Set sentiment-specific styles
+            switch (sentiment.toLowerCase()) {
+                case 'positive':
+                    style += 'color: #4caf50;'; // Green color for positive sentiment
+                    $sentimentElement.html('<span style="' + style + '">😊 Positive</span>');
+                    break;
+                case 'neutral':
+                    style += 'color: #ffc107;'; // Yellow color for neutral sentiment
+                    $sentimentElement.html('<span style="' + style + '">😐 Neutral</span>');
+                    break;
+                case 'negative':
+                    style += 'color: #f44336;'; // Red color for negative sentiment
+                    $sentimentElement.html('<span style="' + style + '">😢 Negative</span>');
+                    break;
+                default:
+                    $sentimentElement.text(sentiment);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="chatwindow receive-page">
+        <div class="message-list">
+            <h2>Receive Page</h2>
+            <div class="auto-select">
+                <label for="autoSelectLast">Auto Select Last Message:</label>
+                <input type="checkbox" id="autoSelectLast" checked>
+            </div>
+            <div id="chat"></div>
+        </div>
+        <div class="selected-message">
+            <h4>Selected Message: <span id="selectedMessage"></span></h4>
+            <p id="sentiment"></p>
+            <p>Probability: <span id="probability"></span></p>
+        </div>
+    </div>
+    <div style="margin-left:30px;">
+        <div id="qrcode"></div> <!-- Move this line to be defined before the script -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+        <script>
+            var currentURL = window.location.href;
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: currentURL+"/send",
+                width: 250,
+                height: 250,
+                colorDark: "#000",
+                colorLight: "#fff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        </script>
+    </div>
+</body>
+
+</html>

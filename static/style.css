@@ -1,0 +1,108 @@
+/* static/style.css */
+html,
+body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    padding: 40px;
+    background-color: #282c35; /* Dark background */
+    color: #ffffff; /* White text */
+    font-family: 'Roboto', sans-serif;
+}
+
+.chatwindow {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 800px;
+    padding: 30px;
+    background-color: #363c4e; /* Darker background */
+    border-radius: 8px;
+}
+
+h2 {
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff; /* White text */
+}
+
+.send-page {
+    background-color: #424a61; /* Darker blue background for send page */
+}
+
+.receive-page {
+    background-color: #424a61; /* Darker blue background for receive page */
+}
+
+.message-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 400px; /* Set max height for the message container */
+}
+
+.auto-select {
+    margin-bottom: 15px;
+}
+
+.selected-message {
+    padding: 20px;
+    background-color: #4f5772; /* Dark blue background for selected message */
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.message-container {
+  overflow-y: auto;
+  max-height: 100%; /* Set max height for the message container */
+}
+
+.message {
+    cursor: pointer;
+    padding: 15px;
+    border: 1px solid #58647b; /* Border color */
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #58647b; /* Background color */
+    color: #ffffff; /* White text */
+}
+
+.message:hover {
+    background-color: #6b7593; /* Lighter background on hover */
+}
+
+.selected {
+    background-color: #7a85a1; /* Light blue background for selected message */
+}
+
+.timestamp {
+  color: #5a5a5a; /* Light gray for timestamp */
+  margin-right: 5px;
+  font-size: 12px; /* Smaller font size for timestamp */
+}
+
+/* ... (previous styles) ... */
+
+.sentiment {
+  font-weight: bold;
+  display: inline-block;
+}
+
+.sentiment.positive {
+  color: #4CAF50; /* Green for positive sentiment */
+}
+
+.sentiment.neutral {
+  color: #FFC107; /* Yellow for neutral sentiment */
+}
+
+.sentiment.negative {
+  color: #F44336; /* Red for negative sentiment */
+}
+
+.sentiment.emoji {
+  font-size: 20px; /* Adjust the font size of the emoji */
+  margin-right: 5px;
+}
