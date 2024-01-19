@@ -71,7 +71,7 @@ def send():
 @socketio.on('text', namespace='/chat')
 def text(message):
     global messages
-    if message['msg'].strip():
+    if message['msg'].strip() and len(message.get('msg', '').split()) >= 10:
         sentiment_probability = get_sentiment_probability(message['msg'])
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         new_message = {

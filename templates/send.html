@@ -8,8 +8,10 @@
     <link href="../static/bootstrap.min.css" rel="stylesheet" />
     <link href="../static/style.css" rel="stylesheet" />
 
+    <!-- Include jQuery -->
     <script type="text/javascript" src="//code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+
     <script type="text/javascript" charset="utf-8">
         var socket;
         $(document).ready(function () {
@@ -17,16 +19,24 @@
 
             $('#send').click(function (e) {
                 text = $('#text').val();
-                $('#text').val('');
-                socket.emit('text', {
-                    msg: text
-                });
+                if (countWords(text) > 10) {
+                    $('#text').val('');
+                    socket.emit('text', {
+                        msg: text
+                    });
+                } else {
+                    alert('Please enter more than 10 words.');
+                }
             });
         });
+
+        function countWords(str) {
+            return str.split(/\s+/).length;
+        }
     </script>
 </head>
 
-<body  style="justify-content:center;">>
+<body style="justify-content:center;">
     <div class="chatwindow send-page">
         <h2>Your text</h2><br>
         <input type="text" id="text" size="60" placeholder="Enter your message here" />

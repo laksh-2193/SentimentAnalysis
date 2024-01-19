@@ -23,3 +23,8 @@ id,msg,sentiment,probability,timestamp
 22,"I hate this movie so much. Bad, will never ever watch this again.",Negative,9.000000357627869,2024-01-19 04:47:39
 23,Such a shitty movie. I won't recommend this to anyone fr.,Negative,25.999999046325684,2024-01-19 05:11:22
 24,OMG! I loved the movie so much. Best I have ever seen,Positive,89.99999761581421,2024-01-19 05:11:42
+25,"hey, a sample word, curious how its accuracy will go. Will it be neutral?",Negative,34.99999940395355,2024-01-19 06:05:49
+26,"such a trach, seriously? who makes such kind of movie. Can anyone even think of it",Negative,31.00000023841858,2024-01-19 06:06:25
+27,"Oh my god! this is like, i dont have words how should i express my feelings here. OMGG!!!",Negative,25.999999046325684,2024-01-19 06:06:56
+28," Oh my god! this is like, i dont have words how should i express my feelings here, such a woww! Best movie i have ever seen",Negative,46.99999988079071,2024-01-19 06:07:22
+29,Literally the best movie i have ever seen. I will definately give this movie one more shot.,Positive,88.99999856948853,2024-01-19 06:07:53
